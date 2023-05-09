@@ -2,8 +2,7 @@ import 'zone.js/dist/zone';
 import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { BaseComponent, BASE_COMPONENTS } from './ui';
-import { IncludeComponent } from './ui/components/dynamic.component';
+import { IncludeComponent } from './ui/components';
 
 @Component({
   selector: 'my-app',

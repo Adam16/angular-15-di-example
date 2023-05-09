@@ -19,12 +19,12 @@ import { CmTeaser } from '../cm-teaser';
     {
       provide: BASE_COMPONENTS,
       multi: true,
-      useFactory: () => new CmTeaser(),
+      useClass: CmTeaser,
     },
     {
       provide: BASE_COMPONENTS,
       multi: true,
-      useFactory: () => new CmArticle(),
+      useClass: CmArticle,
     },
   ],
 })
@@ -48,10 +48,10 @@ export class IncludeComponent implements OnInit {
       );
 
       if (bc.length) {
-        const cm = bc[0] as any;
-        let component: Type<any>;
+        const cm: BaseComponent = bc[0];
+        let component: any;
 
-        if (cm.documentType() === 'lazy') {
+        if (cm.documentType === 'lazy') {
           component = await cm.component;
         } else {
           component = cm.component;
