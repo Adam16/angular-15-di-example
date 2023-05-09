@@ -1,36 +1,19 @@
-import {
-  Component,
-  Inject,
-  Input,
-  OnInit,
-  Type,
-  ViewChild,
-  ViewContainerRef,
-} from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
+import { ComponentPortal, Portal, PortalModule } from '@angular/cdk/portal';
 import { BaseComponent, BASE_COMPONENTS } from '..';
-import { CmArticle } from '../cm-article';
-import { CmTeaser } from '../cm-teaser';
+import { CM_INCLUDES } from '../includes.provider';
+import { CommonModule, NgTemplateOutlet } from '@angular/common';
 
 @Component({
   selector: 'include',
-  template: '<ng-container #content></ng-container>',
+  template: `<ng-template [cdkPortalOutlet]="contentPortal">
+  loading...</ng-template>`,
   standalone: true,
-  providers: [
-    {
-      provide: BASE_COMPONENTS,
-      multi: true,
-      useClass: CmTeaser,
-    },
-    {
-      provide: BASE_COMPONENTS,
-      multi: true,
-      useClass: CmArticle,
-    },
-  ],
+  providers: CM_INCLUDES,
+  imports: [CommonModule, PortalModule],
 })
 export class IncludeComponent implements OnInit {
-  @ViewChild('content', { read: ViewContainerRef, static: true })
-  viewContainer: ViewContainerRef | undefined;
+  contentPortal!: Portal<any>;
 
   @Input() viewtype = '';
   @Input() contenttype = '';
@@ -40,27 +23,21 @@ export class IncludeComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    if (this.viewContainer) {
-      this.viewContainer.clear();
+    const bc = this.implementations.filter(
+      (el) => el.viewType.toLowerCase() === this.viewtype.toLowerCase()
+    );
 
-      const bc = this.implementations.filter(
-        (el) => el.viewType.toLowerCase() === this.viewtype.toLowerCase()
-      );
+    if (bc.length) {
+      const cm: BaseComponent = bc[0];
+      let Component: any;
 
-      if (bc.length) {
-        const cm: BaseComponent = bc[0];
-        let component: any;
-
-        if (cm.documentType === 'lazy') {
-          component = await cm.component;
-        } else {
-          component = cm.component;
-        }
-
-        console.log(component);
-
-        this.viewContainer.createComponent(component);
+      if (cm.documentType === 'lazy') {
+        Component = await cm.component;
+      } else {
+        Component = cm.component;
       }
+
+      this.contentPortal = new ComponentPortal(Component);
     }
   }
 }
