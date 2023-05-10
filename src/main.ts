@@ -1,5 +1,5 @@
 import 'zone.js/dist/zone';
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { IncludeComponent } from './ui/components';
