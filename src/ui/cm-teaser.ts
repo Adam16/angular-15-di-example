@@ -6,7 +6,6 @@ import { TeaserComponent } from './components';
 @Injectable({
   providedIn: 'root',
   useFactory: () => new CmTeaser(),
-  deps: [TeaserComponent],
 })
 export class CmTeaser implements BaseComponent {
   get viewType() {

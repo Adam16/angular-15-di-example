@@ -33,11 +33,10 @@
                 }
               ],
               "optimization": true,
-              "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": true,
               "extractLicenses": true,
-              "vendorChunk": false,
+              "vendorChunk": true,
               "buildOptimizer": true
             }
           }
